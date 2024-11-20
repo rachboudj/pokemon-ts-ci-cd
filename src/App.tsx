@@ -13,7 +13,24 @@ interface Card {
 function App() {
   const [query, setQuery] = useState("");
   const [cards, setCards] = useState<Card[]>([]);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
+  function openModal(card: Card) {
+    setSelectedCard(card);
+    setIsModalOpen(true);
+  }
+
+  function closeModal() {
+    setIsClosing(true); // Déclenche l'animation de fermeture
+    setTimeout(() => {
+      setSelectedCard(null); // Supprime la carte après l'animation
+      setIsModalOpen(false); // Ferme la modale
+      setIsClosing(false); // Réinitialise l'état
+    }, 300); // La durée doit correspondre à celle de `fadeOut`
+  }
+  
   async function search(e: FormEvent) {
     e.preventDefault();
     console.log("Recherche en cours... avec ", query);
@@ -49,10 +66,11 @@ function App() {
           className="bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 px-6 rounded-lg w-full flex items-center justify-center sm:w-auto dark:bg-sky-500 dark:highlight-white/20 dark:hover:bg-sky-400"
         >Rechercher</button>
       </form>
+
       <div className="mt-8 flex flex-wrap justify-around">
         {cards.map((card) => (
           <div key={card.id} className="mt-8">
-            <div className="card-container">
+            <div className="card-container" onClick={() => openModal(card)}>
               <div className="card">
                 <div className="card-front">
                   <img className="w90" src={card.images.small} alt={card.name} />
@@ -66,6 +84,29 @@ function App() {
           </div>
         ))}
       </div>
+
+      {isModalOpen && selectedCard && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div 
+          className={`modal-content ${isClosing ? "fade-out" : ""}`}
+          onClick={(e) => e.stopPropagation()}>
+            {/* <button className="modal-close" onClick={closeModal}>
+              &times;
+            </button> */}
+
+            <div className="flex">
+              <img className="img-card" src={selectedCard.images.large} alt={selectedCard.name} />
+              {/* <div className="mt-4 ml-4">
+                <h2 className="text-slate-900 font-extrabold text-xs sm:text-5xl lg:text-2xl tracking-tight text-center dark:text-black">{selectedCard.name}</h2>
+              </div> */}
+            </div>
+
+
+            {/* Ajoutez d'autres caractéristiques ici si nécessaire */}
+          </div>
+        </div>
+      )}
+
     </>
   );
 }
