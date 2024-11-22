@@ -1,5 +1,7 @@
-let name = "John";
+const name = 'John';
 console.log(name);
 
-const   helloWorld=() =>{console.log("Hello World")}
-helloWorld()
+const helloWorld = () => {
+  console.log('Hello World');
+};
+helloWorld();

@@ -1,5 +1,5 @@
-import { FormEvent, useState } from "react";
-import "./App.css";
+import { FormEvent, useState } from 'react';
+import './App.css';
 
 interface Card {
   id: string;
@@ -11,7 +11,7 @@ interface Card {
 }
 
 function App() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [cards, setCards] = useState<Card[]>([]);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,9 +33,9 @@ function App() {
 
   async function search(e: FormEvent) {
     e.preventDefault();
-    console.log("Recherche en cours... avec ", query);
+    console.log('Recherche en cours... avec ', query);
     const data = await fetch(
-      `https://api.pokemontcg.io/v2/cards?q=name:${query}&pageSize=10`,
+      `https://api.pokemontcg.io/v2/cards?q=name:${query}&pageSize=10`
     );
     const json = await data.json();
     setCards(json.data);
@@ -91,7 +91,7 @@ function App() {
       {isModalOpen && selectedCard && (
         <div className="modal-overlay" onClick={closeModal}>
           <div
-            className={`modal-content ${isClosing ? "fade-out" : ""}`}
+            className={`modal-content ${isClosing ? 'fade-out' : ''}`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* <button className="modal-close" onClick={closeModal}>
