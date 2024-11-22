@@ -29,6 +29,12 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Check TypeScript types
+        run: npm run type-check
+
+      - name: Build the project
+        run: npm run build
+
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}

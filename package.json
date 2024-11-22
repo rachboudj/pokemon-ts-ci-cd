@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "format:write": "prettier --write ."
+    "format:write": "prettier --write .",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "react": "^18.3.1",
