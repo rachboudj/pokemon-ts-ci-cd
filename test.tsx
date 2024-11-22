@@ -1,4 +1,4 @@
-const name = 'John';
+let name = 'John';
 console.log(name);
 
 const helloWorld = () => {
