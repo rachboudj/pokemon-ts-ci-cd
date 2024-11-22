@@ -20,10 +20,13 @@ jobs:
           ssh-private-key: ${{ secrets.SECRET_KEY_CD }}  # Ajoutez votre clé privée SSH dans les secrets de GitHub
 
       # 4. Ajouter le serveur distant à known_hosts pour éviter les problèmes de sécurité
-      - name: Add server to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H 152.228.134.113 >> ~/.ssh/known_hosts
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      name: Adding Known Host
+        run: ssh-keyscan -H 152.228.134.113 >> ~/.ssh/known_hosts
+      name: Ls on server
+        run: ssh debian@152.228.134.113 'ls -la /var/www'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -49,9 +52,5 @@ jobs:
       # - name: List files in the repository
       #   run: |
       #     ls ${{ github.workspace }}
-
-      - name: List files on remote server via SSH
-        run: |
-          ssh -o StrictHostKeyChecking=no debian@152.228.134.113 "ls"
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
