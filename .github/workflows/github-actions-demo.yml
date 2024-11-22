@@ -1,5 +1,6 @@
 name: GitHub Actions Demo
 
+# Déclenche la pipeline sur les événements de `push` ou de `pull_request`.
 on: [push, pull_request]
 
 jobs:
@@ -10,47 +11,61 @@ jobs:
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
 
+      # Clone le code de votre dépôt dans l'environnement du runner.
       - name: Check out repository code
         uses: actions/checkout@v4
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
 
+      # Configure Node.js (version 20) sur le runner et utilise un cache pour accélérer les installations.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
+      # Configure un agent SSH en utilisant la clé privée stockée dans les secrets GitHub.
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # 4. Ajouter le serveur distant à known_hosts pour éviter les problèmes de sécurité
+      # Ajouter le serveur distant à known_hosts pour éviter les problèmes de sécurité
       - uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      # Ajoute manuellement l'hôte distant à la liste `known_hosts` pour éviter des avertissements de sécurité SSH.
       - name: Adding Known Host
         run: ssh-keyscan -H 152.228.134.113 >> ~/.ssh/known_hosts
+
+      # Exécute une commande SSH pour lister les fichiers présents dans le répertoire `/var/www` du serveur distant.
       - name: Ls on server
         run: ssh debian@152.228.134.113 'ls -la /var/www'
 
+      # Installer les dépendances du projet avec `npm ci`.
       # - name: Install dependencies
       #   run: npm ci
 
+      # Vérifier la mise en forme du code avec Prettier.
       # - name: Check Prettier formatting
       #   run: npm run format:check
 
+      # Vérifier les règles de linting avec ESLint.
       # - name: Run ESLint
       #   run: npm run lint
 
+      # Vérifier les types avec TypeScript.
       # - name: Check TypeScript types
       #   run: npm run type-check
 
+      # Compiler le projet avec la commande de build.
       # - name: Build the project
       #   run: npm run build
 
+      # Lister les fichiers du projet dans le répertoire local du runner.
       # - name: List files in the repository
       #   run: |
       #     ls ${{ github.workspace }}
 
+      # Affiche un message indiquant le statut final du job.
       - run: echo "🍏 This job's status is ${{ job.status }}."
