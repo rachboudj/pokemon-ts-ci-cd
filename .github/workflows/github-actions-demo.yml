@@ -22,7 +22,7 @@ jobs:
       # 4. Ajouter le serveur distant à known_hosts pour éviter les problèmes de sécurité
       uses: webfactory/ssh-agent@v0.9.0
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        ssh-private-key: ${{ secrets.SECRET_KEY_CD }}
       name: Adding Known Host
         run: ssh-keyscan -H 152.228.134.113 >> ~/.ssh/known_hosts
       name: Ls on server
