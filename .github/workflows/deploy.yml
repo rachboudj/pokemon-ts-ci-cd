@@ -41,6 +41,9 @@ jobs:
           ssh-keyscan -H 152.228.134.113 >> ~/.ssh/known_hosts
 
       # 6. Déploiement des fichiers avec scp
-      - name: Deploy files to remote server
-        run: |
-          scp -r dist/* debian@152.228.134.113:/home/debian/
+      - name: Deploy files to temporary folder
+        run: scp -r dist/* debian@152.228.134.113:/home/debian/pokedex_temp
+
+
+      - name: Move files to /var/www/html/pokemon.rachidboudjakdji.fr
+        run: ssh debian@152.228.134.113 "sudo mv /home/debian/pokedex_temp/* /var/www/html/pokemon.rachidboudjakdji.fr && sudo chown -R www-data:www-data /var/www/html/pokemon.rachidboudjakdji.fr"
