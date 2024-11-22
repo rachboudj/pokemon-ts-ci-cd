@@ -1,0 +1,46 @@
+name: CD Workflow
+
+# Déclenche uniquement sur les pushs vers la branche `main`
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout du code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configuration de Node.js et installation des dépendances
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # 3. Build du projet
+      - name: Build the project
+        run: npm run build
+
+      # 4. Configuration de l'agent SSH
+      - name: Start SSH Agent
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # 5. Ajout de l'hôte au fichier `known_hosts`
+      - name: Add host to known_hosts
+        run: |
+          ssh-keyscan -H 152.228.134.113 >> ~/.ssh/known_hosts
+
+      # 6. Déploiement des fichiers avec scp
+      - name: Deploy files to remote server
+        run: |
+          scp -r dist/* debian@152.228.134.113:/home/debian/
